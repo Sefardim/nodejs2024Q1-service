@@ -1,19 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsString, IsUUID } from 'class-validator';
 
 import { ICreateAlbum } from '../interfaces/album.interface';
 
 export class CreateAlbumDto implements ICreateAlbum {
-  @ApiProperty()
+  @ApiProperty({
+    required: true,
+    description: 'Album name',
+    example: 'The Venice Connection',
+    type: String,
+  })
   @IsString({ message: 'Album name must be a string' })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: true,
+    description: 'Album year',
+    example: 1989,
+    type: Number,
+  })
   @IsNumber({}, { message: 'Album year must be a number' })
   year: number;
 
-  @ApiProperty()
-  @IsOptional()
-  @IsString({ message: 'Album artistId must be a string' })
+  @ApiProperty({
+    required: true,
+    nullable: true,
+    description: 'Artist id',
+    example: 'a38e02fd-52af-4f1d-992b-bbf4f62de5de',
+    type: String,
+  })
+  @IsUUID(4, { message: 'Artist id must be a valid uuid' })
   artistId: string;
 }

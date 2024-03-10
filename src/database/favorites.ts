@@ -24,18 +24,6 @@ export const addFavoriteArtist = (id: string): void => {
   favoritesDb.artists.push(id);
 };
 
-export const isFavoriteAlbumExist = (id: string): boolean => {
-  return !!favoritesDb.albums.find(albumId => albumId === id);
-};
-
-export const isFavoriteTrackExist = (id: string): boolean => {
-  return !!favoritesDb.tracks.find(trackId => trackId === id);
-};
-
-export const isFavoriteArtistExist = (id: string): boolean => {
-  return !!favoritesDb.artists.find(artistId => artistId === id);
-};
-
 export const getAllFavorites = (): IFavoritesResponse => {
   const artists = favoritesDb.artists.map((id) => getArtistById(id));
   const albums = favoritesDb.albums.map((id) => getAlbumById(id));
@@ -46,4 +34,19 @@ export const getAllFavorites = (): IFavoritesResponse => {
     albums,
     tracks,
   };
+};
+
+export const removeFavoriteTrack = (id: string) => {
+  const currentTrackIndex = favoritesDb.tracks.findIndex((ids) => ids === id);
+  favoritesDb.tracks.splice(currentTrackIndex, 1);
+};
+
+export const removeFavoriteAlbum = (id: string) => {
+  const currentAlbumIndex = favoritesDb.albums.findIndex((ids) => ids === id);
+  favoritesDb.albums.splice(currentAlbumIndex, 1);
+};
+
+export const removeFavoriteArtist = (id: string) => {
+  const currentArtistIndex = favoritesDb.artists.findIndex((ids) => ids === id);
+  favoritesDb.artists.splice(currentArtistIndex, 1);
 };

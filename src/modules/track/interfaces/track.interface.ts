@@ -6,9 +6,4 @@ export interface ITrack {
   duration: number; // integer number
 }
 
-export interface ICreateTrack {
-  name: string;
-  duration: number;
-  artistId: string | null;
-  albumId: string | null;
-}
+export type ICreateTrack = Omit<ITrack, 'id'>;

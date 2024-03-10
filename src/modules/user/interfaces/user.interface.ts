@@ -16,3 +16,5 @@ export interface IUpdateUserPassword {
   oldPassword: string;
   newPassword: string;
 }
+
+export type IUserWithoutPassword = Omit<IUser, 'password'>;

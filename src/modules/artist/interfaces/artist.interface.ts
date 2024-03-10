@@ -4,7 +4,4 @@ export interface IArtist {
   grammy: boolean;
 }
 
-export interface ICreateArtist {
-  name: string;
-  grammy: boolean;
-}
+export type ICreateArtist = Omit<IArtist, 'id'>;

@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ITrack } from '../modules/track/interfaces/track.interface';
 import { CreateTrackDto } from '../modules/track/dto/create.track.dto';
 import { UpdateTrackDto } from '../modules/track/dto/update.track.dto';
+import { favoritesDb } from './favorites';
 
 export const TracksDb: ITrack[] = [];
 
@@ -19,11 +20,15 @@ export const getTrackById = (id: string): ITrack => {
   return TracksDb.find((track) => track.id === id);
 };
 
-export const updateTrackById = (updateTrackDto: UpdateTrackDto, id: string): ITrack => {
+export const updateTrackById = (
+  updateTrackDto: UpdateTrackDto,
+  id: string,
+): ITrack => {
   const currentTrackIndex = TracksDb.findIndex((track) => track.id === id);
   TracksDb[currentTrackIndex] = {
     ...TracksDb[currentTrackIndex],
     ...updateTrackDto,
+    id,
   };
   return TracksDb[currentTrackIndex];
 };
@@ -31,8 +36,12 @@ export const updateTrackById = (updateTrackDto: UpdateTrackDto, id: string): ITr
 export const deleteTrackById = (id: string): void => {
   const currentTrackIndex = TracksDb.findIndex((track) => track.id === id);
   TracksDb.splice(currentTrackIndex, 1);
-};
 
-export const isTrackExist = (id: string): boolean => {
-  return !!TracksDb.find((track) => track.id === id);
+  const favoriteTrackIndex = favoritesDb.tracks.findIndex((ids) => ids === id);
+
+  if (favoriteTrackIndex === -1) {
+    return;
+  }
+
+  favoritesDb.tracks.splice(favoriteTrackIndex, 1);
 };
