@@ -19,6 +19,6 @@ export class UpdateUserPasswordDto implements IUpdateUserPassword {
     example: 'qwertyIsTheBestPassword',
     type: String,
   })
-  @IsString({ message: 'User newPassword must be  string' })
+  @IsString({ message: 'User newPassword must be string' })
   newPassword: string;
 }

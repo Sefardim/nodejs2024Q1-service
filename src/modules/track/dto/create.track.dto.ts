@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, IsUUID } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 import { ICreateTrack } from '../interfaces/track.interface';
+import { IsUuidOrNull } from '../../../common/validators/is.uuid.or.null.validator';
 
 export class CreateTrackDto implements ICreateTrack {
   @ApiProperty({
@@ -28,7 +29,7 @@ export class CreateTrackDto implements ICreateTrack {
     example: 'a38e02fd-52af-4f1d-992b-bbf4f62de5de',
     type: String,
   })
-  @IsUUID(4, { message: 'Artist id must be a valid uuid' })
+  @IsUuidOrNull()
   artistId: string;
 
   @ApiProperty({
@@ -37,6 +38,6 @@ export class CreateTrackDto implements ICreateTrack {
     example: 'a38e02fd-52af-4f1d-992b-bbf4f62de5de',
     type: String,
   })
-  @IsUUID(4, { message: 'Album id must be a valid uuid' })
+  @IsUuidOrNull()
   albumId: string;
 }
