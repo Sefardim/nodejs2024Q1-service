@@ -17,7 +17,7 @@ import { UpdateUserPasswordDto } from './dto/update.user.password.dto';
 import { User } from '../../common/decorators/user.decorator';
 
 @Controller('user')
-@ApiTags('track')
+@ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get()
