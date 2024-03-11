@@ -8,6 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
+import { ApiTags } from '@nestjs/swagger';
 
 import { ArtistService } from './artist.service';
 import { IArtist } from '../artist/interfaces/artist.interface';
@@ -16,6 +17,7 @@ import { UpdateArtistDto } from '../artist/dto/update.artist.dto';
 import { Artist } from '../../common/decorators/artist.decorator';
 
 @Controller('artist')
+@ApiTags('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 

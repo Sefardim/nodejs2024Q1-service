@@ -1,5 +1,6 @@
 import { Controller, Delete, Get, HttpCode, Post } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
+import { ApiTags } from '@nestjs/swagger';
 
 import { FavoritesService } from './favorites.service';
 import { IFavoritesResponse } from './interfaces/favorires.interface';
@@ -11,6 +12,7 @@ import { Artist } from '../../common/decorators/artist.decorator';
 import { IArtist } from '../artist/interfaces/artist.interface';
 
 @Controller('favs')
+@ApiTags('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 

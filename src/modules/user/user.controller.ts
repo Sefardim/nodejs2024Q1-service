@@ -8,6 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
+import { ApiTags } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
 import { IUser, IUserWithoutPassword } from './interfaces/user.interface';
@@ -16,6 +17,7 @@ import { UpdateUserPasswordDto } from './dto/update.user.password.dto';
 import { User } from '../../common/decorators/user.decorator';
 
 @Controller('user')
+@ApiTags('track')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get()

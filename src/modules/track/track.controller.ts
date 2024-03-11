@@ -8,6 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
+import { ApiTags } from '@nestjs/swagger';
 
 import { TrackService } from './track.service';
 import { ITrack } from './interfaces/track.interface';
@@ -16,6 +17,7 @@ import { UpdateTrackDto } from './dto/update.track.dto';
 import { Track } from '../../common/decorators/track.decorator';
 
 @Controller('track')
+@ApiTags('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
