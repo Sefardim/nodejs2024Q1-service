@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
-  HttpCode,
+  Get, Header,
+  HttpCode, Param, ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -14,7 +14,6 @@ import { TrackService } from './track.service';
 import { ITrack } from './interfaces/track.interface';
 import { CreateTrackDto } from './dto/create.track.dto';
 import { UpdateTrackDto } from './dto/update.track.dto';
-import { Track } from '../../common/decorators/track.decorator';
 
 @Controller('track')
 @ApiTags('track')
@@ -22,31 +21,36 @@ export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Get()
-  getAllTrack(): ITrack[] {
+  @Header('Content-Type', 'application/json')
+  getAllTrack(): Promise<ITrack[]> {
     return this.trackService.getAllTracks();
   }
 
   @Post()
-  createTrack(@Body() createTrackDto: CreateTrackDto): ITrack {
+  @Header('Content-Type', 'application/json')
+  createTrack(@Body() createTrackDto: CreateTrackDto): Promise<ITrack> {
     return this.trackService.createTrack(createTrackDto);
   }
 
   @Get(':id')
-  getTrackById(@Track() track: ITrack): ITrack {
-    return this.trackService.getTracksById(track);
+  @Header('Content-Type', 'application/json')
+  getTrackById(@Param('id', ParseUUIDPipe) id: string): Promise<ITrack> {
+    return this.trackService.getTracksById(id);
   }
 
   @Put(':id')
+  @Header('Content-Type', 'application/json')
   updateTrackById(
-    @Track() track: ITrack,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
-  ): ITrack {
-    return this.trackService.updateTrackById(updateTrackDto, track.id);
+  ): Promise<ITrack> {
+    return this.trackService.updateTrackById(updateTrackDto, id);
   }
 
   @Delete(':id')
+  @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  deleteTrackById(@Track() track: ITrack): void {
-    return this.trackService.deleteTrackById(track.id);
+  deleteTrackById(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return this.trackService.deleteTrackById(id);
   }
 }
