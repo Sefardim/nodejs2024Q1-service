@@ -7,7 +7,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
 export class TrackService {
-  constructor (private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
   getAllTracks(): Promise<ITrack[]> {
     return this.prisma.track.findMany();
   }
@@ -15,16 +15,16 @@ export class TrackService {
   createTrack(createTrackDto: CreateTrackDto) {
     return this.prisma.track.create({
       data: {
-        ...createTrackDto
-      }
+        ...createTrackDto,
+      },
     });
   }
 
   async getTracksById(id: string) {
     const track = await this.prisma.track.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
 
     if (!track) {
@@ -37,8 +37,8 @@ export class TrackService {
   async updateTrackById(updateTrackDto: UpdateTrackDto, id: string) {
     const track = await this.prisma.track.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
 
     if (!track) {
@@ -47,21 +47,45 @@ export class TrackService {
 
     return this.prisma.track.update({
       where: {
-        id
+        id,
       },
       data: {
         ...updateTrackDto,
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 
   async deleteTrackById(id: string) {
+    const track = await this.prisma.track.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+
     await this.prisma.track.delete({
       where: {
-        id
-      }
+        id,
+      },
     });
+
+    const favorites = await this.prisma.favorites.findFirst();
+
+    await this.prisma.favorites.update({
+      where: {
+        id: favorites.id,
+      },
+      data: {
+        tracks: {
+          set: favorites.tracks.filter((ids) => ids !== id),
+        },
+      },
+    });
+
     return;
   }
 }

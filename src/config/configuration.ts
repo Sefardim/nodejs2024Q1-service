@@ -10,6 +10,6 @@ const postgres = registerAs('postgres', () => ({
   user: process.env.POSTGRES_USER || 'postgres',
   password: process.env.POSTGRES_PASSWORD || 'postgres',
   dataBase: process.env.POSTGRES_DATABASE || 'local',
-}))
+}));
 
 export { server, postgres };

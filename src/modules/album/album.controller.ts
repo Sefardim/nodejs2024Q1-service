@@ -2,8 +2,11 @@ import {
   Body,
   Controller,
   Delete,
-  Get, Header,
-  HttpCode, Param, ParseUUIDPipe,
+  Get,
+  Header,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -40,7 +43,7 @@ export class AlbumController {
   @Put(':id')
   @Header('Content-Type', 'application/json')
   updateAlbumById(
-      @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumDto: CreateAlbumDto,
   ): Promise<IAlbum> {
     return this.albumService.updateAlbumById(updateAlbumDto, id);

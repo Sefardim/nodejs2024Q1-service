@@ -6,7 +6,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
 export class AlbumService {
-  constructor (private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
   getAllAlbums(): Promise<IAlbum[]> {
     return this.prisma.album.findMany();
   }
@@ -14,16 +14,16 @@ export class AlbumService {
   createAlbum(createAlbumDto: CreateAlbumDto): Promise<IAlbum> {
     return this.prisma.album.create({
       data: {
-        ...createAlbumDto
-      }
+        ...createAlbumDto,
+      },
     });
   }
 
   async getAlbumById(id: string): Promise<IAlbum> {
     const album = await this.prisma.album.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
 
     if (!album) {
@@ -33,11 +33,14 @@ export class AlbumService {
     return album;
   }
 
-  async updateAlbumById(updateAlbumDto: CreateAlbumDto, id: string): Promise<IAlbum> {
+  async updateAlbumById(
+    updateAlbumDto: CreateAlbumDto,
+    id: string,
+  ): Promise<IAlbum> {
     const album = await this.prisma.album.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
 
     if (!album) {
@@ -46,21 +49,45 @@ export class AlbumService {
 
     return this.prisma.album.update({
       where: {
-        id
+        id,
       },
       data: {
         ...updateAlbumDto,
-        id
-      }
+        id,
+      },
     });
   }
 
   async deleteAlbumById(id: string): Promise<void> {
+    const album = await this.prisma.album.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
     await this.prisma.album.delete({
       where: {
-        id
-      }
+        id,
+      },
     });
+
+    const favorites = await this.prisma.favorites.findFirst();
+
+    await this.prisma.favorites.update({
+      where: {
+        id: favorites.id,
+      },
+      data: {
+        albums: {
+          set: favorites.albums.filter((ids) => ids !== id),
+        },
+      },
+    });
+
     return;
   }
 }

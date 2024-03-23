@@ -1,4 +1,13 @@
-import { Controller, Delete, Get, Header, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Header,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -25,7 +34,9 @@ export class FavoritesController {
   @Delete('/track/:id')
   @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  removeTrackFromFavorites(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+  removeTrackFromFavorites(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<void> {
     return this.favoritesService.removeTrackFromFavorites(id);
   }
 
@@ -38,7 +49,9 @@ export class FavoritesController {
   @Delete('/album/:id')
   @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  removeAlbumFromFavorites(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+  removeAlbumFromFavorites(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<void> {
     return this.favoritesService.removeAlbumFromFavorites(id);
   }
 
@@ -51,7 +64,9 @@ export class FavoritesController {
   @Delete('/artist/:id')
   @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  removeArtistFromFavorites(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+  removeArtistFromFavorites(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<void> {
     return this.favoritesService.removeArtistFromFavorites(id);
   }
 }
