@@ -19,6 +19,6 @@ export class UpdateArtistDto implements ICreateArtist {
     example: false,
     type: Boolean,
   })
-  @IsBoolean({ message: 'Artist grammy must be a boolean' })
+  @IsBoolean({ message: 'Artist name must be a boolean' })
   grammy: boolean;
 }

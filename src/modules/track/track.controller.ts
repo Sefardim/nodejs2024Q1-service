@@ -3,10 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  Header,
   HttpCode,
-  Param,
-  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -17,6 +14,7 @@ import { TrackService } from './track.service';
 import { ITrack } from './interfaces/track.interface';
 import { CreateTrackDto } from './dto/create.track.dto';
 import { UpdateTrackDto } from './dto/update.track.dto';
+import { Track } from '../../common/decorators/track.decorator';
 
 @Controller('track')
 @ApiTags('track')
@@ -24,36 +22,31 @@ export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Get()
-  @Header('Content-Type', 'application/json')
-  getAllTrack(): Promise<ITrack[]> {
+  getAllTrack(): ITrack[] {
     return this.trackService.getAllTracks();
   }
 
   @Post()
-  @Header('Content-Type', 'application/json')
-  createTrack(@Body() createTrackDto: CreateTrackDto): Promise<ITrack> {
+  createTrack(@Body() createTrackDto: CreateTrackDto): ITrack {
     return this.trackService.createTrack(createTrackDto);
   }
 
   @Get(':id')
-  @Header('Content-Type', 'application/json')
-  getTrackById(@Param('id', ParseUUIDPipe) id: string): Promise<ITrack> {
-    return this.trackService.getTracksById(id);
+  getTrackById(@Track() track: ITrack): ITrack {
+    return this.trackService.getTracksById(track);
   }
 
   @Put(':id')
-  @Header('Content-Type', 'application/json')
   updateTrackById(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Track() track: ITrack,
     @Body() updateTrackDto: UpdateTrackDto,
-  ): Promise<ITrack> {
-    return this.trackService.updateTrackById(updateTrackDto, id);
+  ): ITrack {
+    return this.trackService.updateTrackById(updateTrackDto, track.id);
   }
 
   @Delete(':id')
-  @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  deleteTrackById(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.trackService.deleteTrackById(id);
+  deleteTrackById(@Track() track: ITrack): void {
+    return this.trackService.deleteTrackById(track.id);
   }
 }

@@ -3,10 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  Header,
   HttpCode,
-  Param,
-  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -16,6 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AlbumService } from './album.service';
 import { IAlbum } from '../Album/interfaces/Album.interface';
 import { CreateAlbumDto } from '../Album/dto/create.Album.dto';
+import { Album } from '../../common/decorators/album.decorator';
 
 @Controller('album')
 @ApiTags('album')
@@ -23,36 +21,31 @@ export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @Get()
-  @Header('Content-Type', 'application/json')
-  getAllAlbums(): Promise<IAlbum[]> {
+  getAllAlbums(): IAlbum[] {
     return this.albumService.getAllAlbums();
   }
 
   @Post()
-  @Header('Content-Type', 'application/json')
-  createAlbum(@Body() createAlbumDto: CreateAlbumDto): Promise<IAlbum> {
+  createAlbum(@Body() createAlbumDto: CreateAlbumDto): IAlbum {
     return this.albumService.createAlbum(createAlbumDto);
   }
 
   @Get(':id')
-  @Header('Content-Type', 'application/json')
-  getAlbumById(@Param('id', ParseUUIDPipe) id: string): Promise<IAlbum> {
-    return this.albumService.getAlbumById(id);
+  getAlbumById(@Album() album: IAlbum): IAlbum {
+    return this.albumService.getAlbumById(album);
   }
 
   @Put(':id')
-  @Header('Content-Type', 'application/json')
   updateAlbumById(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Album() album: IAlbum,
     @Body() updateAlbumDto: CreateAlbumDto,
-  ): Promise<IAlbum> {
-    return this.albumService.updateAlbumById(updateAlbumDto, id);
+  ) {
+    return this.albumService.updateAlbumById(updateAlbumDto, album.id);
   }
 
   @Delete(':id')
-  @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  deleteAlbumById(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.albumService.deleteAlbumById(id);
+  deleteAlbumById(@Album() album: IAlbum) {
+    return this.albumService.deleteAlbumById(album.id);
   }
 }

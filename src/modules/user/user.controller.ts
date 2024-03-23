@@ -3,10 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  Header,
   HttpCode,
-  Param,
-  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -14,50 +11,44 @@ import { StatusCodes } from 'http-status-codes';
 import { ApiTags } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
-import { IUserWithoutPassword } from './interfaces/user.interface';
+import { IUser, IUserWithoutPassword } from './interfaces/user.interface';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserPasswordDto } from './dto/update.user.password.dto';
+import { User } from '../../common/decorators/user.decorator';
 
 @Controller('user')
 @ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
   @Get()
-  @Header('Content-Type', 'application/json')
-  getAllUser(): Promise<IUserWithoutPassword[]> {
+  getAllUser(): IUserWithoutPassword[] {
     return this.userService.getAllUsers();
   }
 
   @Post()
-  @Header('Content-Type', 'application/json')
-  createUser(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<IUserWithoutPassword> {
+  createUser(@Body() createUserDto: CreateUserDto): IUserWithoutPassword {
     return this.userService.createUser(createUserDto);
   }
 
   @Get(':id')
-  @Header('Content-Type', 'application/json')
-  getUserById(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<IUserWithoutPassword> {
-    return this.userService.getUsersById(id);
+  getUserById(@User() user: IUser): IUserWithoutPassword {
+    return this.userService.getUsersById(user);
   }
 
   @Put(':id')
-  @Header('Content-Type', 'application/json')
   updateUserPasswordById(
-    @Param('id', ParseUUIDPipe) id: string,
+    @User() user: IUser,
     @Body() updateUserPasswordDto: UpdateUserPasswordDto,
-  ): Promise<IUserWithoutPassword> {
-    return this.userService.updateUserPasswordById(updateUserPasswordDto, id);
+  ): IUserWithoutPassword {
+    return this.userService.updateUserPasswordById(
+      updateUserPasswordDto,
+      user.id,
+    );
   }
 
   @Delete(':id')
-  @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  deleteUserById(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.userService.deleteUserById(id);
+  deleteUserById(@User() user: IUser) {
+    return this.userService.deleteUserById(user.id);
   }
 }

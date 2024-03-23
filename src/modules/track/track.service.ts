@@ -1,91 +1,33 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
+import {
+  createTrack,
+  deleteTrackById,
+  TracksDb,
+  updateTrackById,
+} from '../../database/traks';
 import { ITrack } from './interfaces/track.interface';
 import { CreateTrackDto } from './dto/create.track.dto';
 import { UpdateTrackDto } from './dto/update.track.dto';
-import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
 export class TrackService {
-  constructor(private readonly prisma: PrismaService) {}
-  getAllTracks(): Promise<ITrack[]> {
-    return this.prisma.track.findMany();
+  getAllTracks(): ITrack[] {
+    return TracksDb;
   }
 
   createTrack(createTrackDto: CreateTrackDto) {
-    return this.prisma.track.create({
-      data: {
-        ...createTrackDto,
-      },
-    });
+    return createTrack(createTrackDto);
   }
 
-  async getTracksById(id: string) {
-    const track = await this.prisma.track.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!track) {
-      throw new NotFoundException('Track not found');
-    }
-
+  getTracksById(track: ITrack) {
     return track;
   }
-
-  async updateTrackById(updateTrackDto: UpdateTrackDto, id: string) {
-    const track = await this.prisma.track.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!track) {
-      throw new NotFoundException('Track not found');
-    }
-
-    return this.prisma.track.update({
-      where: {
-        id,
-      },
-      data: {
-        ...updateTrackDto,
-        id,
-      },
-    });
+  updateTrackById(updateTrackDto: UpdateTrackDto, id: string) {
+    return updateTrackById(updateTrackDto, id);
   }
 
-  async deleteTrackById(id: string) {
-    const track = await this.prisma.track.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!track) {
-      throw new NotFoundException('Track not found');
-    }
-
-    await this.prisma.track.delete({
-      where: {
-        id,
-      },
-    });
-
-    const favorites = await this.prisma.favorites.findFirst();
-
-    await this.prisma.favorites.update({
-      where: {
-        id: favorites.id,
-      },
-      data: {
-        tracks: {
-          set: favorites.tracks.filter((ids) => ids !== id),
-        },
-      },
-    });
-
-    return;
+  deleteTrackById(id: string) {
+    return deleteTrackById(id);
   }
 }

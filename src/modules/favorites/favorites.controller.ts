@@ -1,18 +1,15 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  Header,
-  HttpCode,
-  Param,
-  ParseUUIDPipe,
-  Post,
-} from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Post } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 import { ApiTags } from '@nestjs/swagger';
 
 import { FavoritesService } from './favorites.service';
 import { IFavoritesResponse } from './interfaces/favorires.interface';
+import { Track } from '../../common/decorators/track.decorator';
+import { ITrack } from '../track/interfaces/track.interface';
+import { Album } from '../../common/decorators/album.decorator';
+import { IAlbum } from '../album/interfaces/album.interface';
+import { Artist } from '../../common/decorators/artist.decorator';
+import { IArtist } from '../artist/interfaces/artist.interface';
 
 @Controller('favs')
 @ApiTags('favs')
@@ -20,53 +17,40 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  @Header('Content-Type', 'application/json')
-  getAllFavorites(): Promise<IFavoritesResponse> {
+  getAllFavorites(): IFavoritesResponse {
     return this.favoritesService.getAllFavorites();
   }
 
   @Post('/track/:id')
-  @Header('Content-Type', 'application/json')
-  addTrackToFavorites(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.favoritesService.addTrackToFavorites(id);
+  addTrackToFavorites(@Track() track: ITrack) {
+    return this.favoritesService.addTrackToFavorites(track.id);
   }
 
   @Delete('/track/:id')
-  @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  removeTrackFromFavorites(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<void> {
-    return this.favoritesService.removeTrackFromFavorites(id);
+  removeTrackFromFavorites(@Track() track: ITrack) {
+    return this.favoritesService.removeTrackFromFavorites(track.id);
   }
 
   @Post('/album/:id')
-  @Header('Content-Type', 'application/json')
-  addAlbumToFavorites(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.favoritesService.addAlbumToFavorites(id);
+  addAlbumToFavorites(@Album() album: IAlbum) {
+    return this.favoritesService.addAlbumToFavorites(album.id);
   }
 
   @Delete('/album/:id')
-  @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  removeAlbumFromFavorites(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<void> {
-    return this.favoritesService.removeAlbumFromFavorites(id);
+  removeAlbumFromFavorites(@Album() album: IAlbum) {
+    return this.favoritesService.removeAlbumFromFavorites(album.id);
   }
 
   @Post('/artist/:id')
-  @Header('Content-Type', 'application/json')
-  addArtistToFavorites(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.favoritesService.addArtistToFavorites(id);
+  addArtistToFavorites(@Artist() artist: IArtist) {
+    return this.favoritesService.addArtistToFavorites(artist.id);
   }
 
   @Delete('/artist/:id')
-  @Header('Content-Type', 'application/json')
   @HttpCode(StatusCodes.NO_CONTENT)
-  removeArtistFromFavorites(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<void> {
-    return this.favoritesService.removeArtistFromFavorites(id);
+  removeArtistFromFavorites(@Artist() artist: IArtist) {
+    return this.favoritesService.removeArtistFromFavorites(artist.id);
   }
 }
