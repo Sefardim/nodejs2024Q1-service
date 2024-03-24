@@ -14,8 +14,8 @@ import { StatusCodes } from 'http-status-codes';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AlbumService } from './album.service';
-import { IAlbum } from '../Album/interfaces/Album.interface';
-import { CreateAlbumDto } from '../Album/dto/create.Album.dto';
+import { IAlbum } from './interfaces/album.interface';
+import { CreateAlbumDto } from './dto/create.album.dto';
 
 @Controller('album')
 @ApiTags('album')

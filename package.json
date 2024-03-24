@@ -23,7 +23,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "migrate": "npx prisma migrate dev"
+    "migrate": "npx prisma migrate dev",
+    "start:migrate:prod": "prisma migrate deploy && npm run start:prod",
+    "audit": "npm audit"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.3",
