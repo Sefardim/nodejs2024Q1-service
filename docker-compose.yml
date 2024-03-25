@@ -1,4 +1,4 @@
-version: '1.0'
+version: '3.9'
 services:
   nest-api:
     build:
@@ -26,7 +26,6 @@ services:
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_PORT=${POSTGRES_PORT}
     volumes:
       - postgres:/var/lib/postgresql/data
     networks:
@@ -34,7 +33,6 @@ services:
 
 volumes:
   postgres:
-    name: nest-prisma-docker-db
 networks:
   api_service:
     external: false

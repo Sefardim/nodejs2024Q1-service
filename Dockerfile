@@ -1,23 +1,13 @@
-FROM node:20.11.1 AS builder
+FROM node:20.11.1-alpine
+
+RUN apk add --no-cache --virtual .gyp python3 make g++
 
 WORKDIR /app
 
 COPY package*.json ./
-COPY prisma ./prisma/
 
-RUN npm install
+RUN npm ci && npm cache clean --force
 
 COPY . .
 
-RUN npm run build
-
-FROM node:20.11.1
-
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-
-EXPOSE 3000
-
-CMD [  "npm", "run", "start:migrate:prod" ]
+CMD ["npm", "run", "start:migrate:dev"]
