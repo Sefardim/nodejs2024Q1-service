@@ -1,6 +1,6 @@
 FROM node:20.11.1-alpine
 
-RUN apk add --no-cache --virtual .gyp python3 make g++
+RUN #apk add --no-cache --virtual .gyp python3 make g++
 
 WORKDIR /app
 
