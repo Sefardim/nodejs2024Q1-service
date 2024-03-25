@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  nest-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - PORT=${PORT}
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    networks:
+      - api_service
+
+  postgres:
+    image: postgres:16
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - api_service
+
+volumes:
+  postgres:
+networks:
+  api_service:
+    external: false
+    driver: bridge
